@@ -15,7 +15,7 @@ const App = () => {
 
   // Initial message with typing effect
   useEffect(() => {
-    const initialMessage = 'Hello! My name is Thandar Soe, and I am your estate assistant. I will respond in both English and Myanmar language. What can I help you with today? (မင်္ဂလာပါ! ကျွန်မ နာမည်က သန္တာစိုးပါ။ ကျွန်မက အိမ်ခြံမြေ (Licensed Real Estate Realtor) အကူအညီပေးသူပါ။ ကျွန်မက English & မြန်မာ ဘာသာနဲ့ ပြန်ဖြေပေးပါမယ်။ ဒီနေ့ ဘာကူညီပေးရမလဲ?)';
+    const initialMessage = 'မင်္ဂလာပါ! ကျွန်မ နာမည်က သန္တာစိုးပါ။ ကျွန်မက အိမ်ခြံမြေ အကူအညီပေးသူပါ။ မြန်မာဘာသာနဲ့ မေးရင် မြန်မာနဲ့ပဲ ပြန်ဖြေပါမယ်။ English နဲ့ မေးရင် English နဲ့ပဲ ပြန်ဖြေပါမယ်။ \n\nHello! My name is Thandar Soe, and I am your real estate assistant. I will respond in the same language you use - Myanmar for Myanmar, English for English. How can I help you today?';
     
     const typeInitialMessage = async () => {
       await speakMessage(initialMessage);
@@ -46,8 +46,8 @@ const App = () => {
     setLoading(true);
 
     try {
-      // The prompt is updated to include the name "Thandar Soe" for the bot's persona.
-      const prompt = `Your name is Thandar Soe. You are a helpful and friendly female real estate agent. Your goal is to assist users with their real estate questions, provide information about properties, and guide them through the process. Your tone should be professional yet approachable. You can answer questions about buying, selling, or renting properties. Please respond in the Myanmar language. Always end your response by asking how you can further assist the user. User: ${userMessage}`;
+      // The prompt is updated to include language detection and matching response language.
+      const prompt = `Your name is Thandar Soe. You are a helpful and friendly female real estate agent. CRITICAL INSTRUCTION: Detect the language of the user's input and respond ONLY in that same language. If user writes in Myanmar language (မြန်မာ), respond ONLY in Myanmar. If user writes in English, respond ONLY in English. Do not mix languages or provide translations. Your goal is to assist users with their real estate questions, provide information about properties, and guide them through the process. Your tone should be professional yet approachable. You can answer questions about buying, selling, or renting properties. Always end your response by asking how you can further assist the user in the SAME language they used. User: ${userMessage}`
       const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
 
       const payload = {
