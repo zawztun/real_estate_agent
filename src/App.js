@@ -83,7 +83,22 @@ const App = () => {
 
     } catch (error) {
       console.error("Error calling Gemini API:", error);
-      setMessages((prevMessages) => [...prevMessages, { role: 'bot', text: 'Oops! Something went wrong. Please try again later.' }]);
+      let errorMessage = 'Oops! Something went wrong. Please try again later.';
+      
+      // More specific error messages for debugging
+      if (error.message.includes('API error: 400')) {
+        errorMessage = 'Invalid request. Please check your message and try again.';
+      } else if (error.message.includes('API error: 401')) {
+        errorMessage = 'Authentication failed. API key may be invalid.';
+      } else if (error.message.includes('API error: 403')) {
+        errorMessage = 'API access forbidden. Please check API key permissions.';
+      } else if (error.message.includes('Failed to fetch')) {
+        errorMessage = 'Network error. Please check your connection.';
+      } else if (!process.env.REACT_APP_API_KEY) {
+        errorMessage = 'API configuration error. Please contact support.';
+      }
+      
+      setMessages((prevMessages) => [...prevMessages, { role: 'bot', text: errorMessage }]);
       setLoading(false);
       setIsSpeaking(false);
     }
