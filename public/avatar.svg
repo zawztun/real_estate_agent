@@ -1,0 +1,26 @@
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="50" fill="#A0D0E0"/>
+  
+  <!-- Face -->
+  <circle cx="50" cy="40" r="18" fill="#F4C2A1"/>
+  
+  <!-- Hair -->
+  <path d="M32 32 Q50 20 68 32 Q68 25 50 22 Q32 25 32 32" fill="#4A4A4A"/>
+  
+  <!-- Eyes -->
+  <circle cx="44" cy="37" r="2" fill="#333"/>
+  <circle cx="56" cy="37" r="2" fill="#333"/>
+  
+  <!-- Nose -->
+  <ellipse cx="50" cy="42" rx="1" ry="2" fill="#E6A584"/>
+  
+  <!-- Mouth -->
+  <path d="M46 46 Q50 49 54 46" stroke="#333" stroke-width="1" fill="none"/>
+  
+  <!-- Body/Shoulders -->
+  <ellipse cx="50" cy="85" rx="25" ry="15" fill="#6B73FF"/>
+  
+  <!-- Text -->
+  <text x="50" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white" font-weight="bold">TS</text>
+</svg>
