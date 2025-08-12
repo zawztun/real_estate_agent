@@ -160,6 +160,77 @@ useEffect(() => {
 - [ ] Test message sent successfully
 - [ ] API key removed from `.env` file
 
+## 📋 API Troubleshooting Guide
+
+### Common Issues and Solutions
+
+#### 1. Production Error: POST to Vercel Domain (405 Method Not Allowed)
+**Error:** `POST https://your-app.vercel.app/undefined?key=... net::ERR_ABORTED 405 (Method Not Allowed)`
+
+**Root Cause:** Environment variables are not configured in Vercel Dashboard
+
+**Solution:**
+1. Go to your Vercel Dashboard: https://vercel.com/dashboard
+2. Select your project
+3. Go to Settings → Environment Variables
+4. Add these variables:
+   - **Name:** `REACT_APP_API_KEY`
+   - **Value:** `AIzaSyCd-4hKHU_LRn7JCZcJdRwPxr8P260Q-aU`
+   - **Environments:** Production, Preview, Development
+   
+   - **Name:** `REACT_APP_API_URL`
+   - **Value:** `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent`
+   - **Environments:** Production, Preview, Development
+5. **IMPORTANT:** Redeploy your application after adding variables
+6. Go to Deployments tab → Click "Redeploy" on latest deployment
+
+**Why this happens:** Vercel doesn't read .env files from your repository for security. Environment variables must be configured in the Vercel Dashboard.
+
+#### 2. API Key Not Found Error
+**Error:** `API key not found. Please check your environment variables.`
+
+**Solution:**
+- Follow the steps in issue #1 above
+- Ensure `REACT_APP_API_KEY` is set in your Vercel Dashboard
+
+#### 3. Network Errors
+**Error:** `Failed to fetch` or network-related errors
+
+**Possible causes:**
+- Invalid API key
+- Incorrect API URL
+- Network connectivity issues
+- CORS issues (shouldn't occur with Google's API)
+
+**Solutions:**
+- Verify your API key is valid and active
+- Check the API URL format
+- Test the API key with a direct API call
+
+#### 4. 403 Forbidden Error
+**Error:** `403 Forbidden`
+
+**Solution:**
+- Your API key may be invalid or expired
+- Check if your Google Cloud project has the Generative AI API enabled
+- Verify billing is set up for your Google Cloud project
+
+### Environment Variable Setup
+
+**For Vercel Deployment:**
+1. Go to your Vercel Dashboard
+2. Select your project
+3. Go to Settings → Environment Variables
+4. Add these variables:
+   - `REACT_APP_API_KEY`: `AIzaSyCd-4hKHU_LRn7JCZcJdRwPxr8P260Q-aU`
+   - `REACT_APP_API_URL`: `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent`
+5. Set them for Production, Preview, and Development environments
+6. **MUST REDEPLOY** after adding variables
+
+**For Local Development:**
+- Environment variables are configured in `.env.local`
+- Never commit API keys to the repository
+
 ## 🆘 Still Not Working?
 
 1. **Check Vercel Build Logs:**

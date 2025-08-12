@@ -13,18 +13,54 @@ const App = () => {
   const [isInitialTyping, setIsInitialTyping] = useState(true);
   const messagesEndRef = useRef(null);
 
-  // Initial message with typing effect
+  // Initial message with typing effect - only show on first visit
   useEffect(() => {
-    const initialMessage = 'မင်္ဂလာပါ! ကျွန်မ နာမည်က သန္တာစိုးပါ။ ကျွန်မက အိမ်ခြံမြေ အကူအညီပေးသူပါ။ မြန်မာဘာသာနဲ့ မေးရင် မြန်မာနဲ့ပဲ ပြန်ဖြေပါမယ်။ English နဲ့ မေးရင် English နဲ့ပဲ ပြန်ဖြေပါမယ်။ \n\nHello! My name is Thandar Soe, and I am your real estate assistant. I will respond in the same language you use - Myanmar for Myanmar, English for English. How can I help you today?';
+    // For testing: uncomment the next line to always show introduction
+    localStorage.removeItem('thandarSoeIntroSeen');
     
-    const typeInitialMessage = async () => {
-      await speakMessage(initialMessage);
-      setMessages([{ role: 'bot', text: initialMessage }]);
-      setCurrentBotResponse('');
+    const hasSeenIntroduction = localStorage.getItem('thandarSoeIntroSeen');
+    console.log('Has seen introduction:', hasSeenIntroduction);
+    console.log('Type of hasSeenIntroduction:', typeof hasSeenIntroduction);
+    
+    // Show introduction if localStorage is null, undefined, or 'false'
+    const shouldShowIntroduction = !hasSeenIntroduction || hasSeenIntroduction !== 'true';
+    console.log('Should show introduction:', shouldShowIntroduction);
+    
+    if (shouldShowIntroduction) {
+      console.log('Showing introduction for first time');
+      const initialMessage = 'မင်္ဂလာပါ! ကျွန်မ နာမည်က သန္တာစိုးပါ။ ကျွန်မက အိမ်ခြံမြေ အကူအညီပေးသူပါ။ မြန်မာဘာသာနဲ့ မေးရင် မြန်မာနဲ့ပဲ ပြန်ဖြေပါမယ်။ English နဲ့ မေးရင် English နဲ့ပဲ ပြန်ဖြေပါမယ်။ \n\nHello! My name is Thandar Soe, and I am your real estate assistant. I will respond in the same language you use - Myanmar for Myanmar, English for English. How can I help you today?';
+      
+      const typeInitialMessage = async () => {
+        console.log('Starting to type initial message');
+        setIsInitialTyping(true);
+        await speakMessage(initialMessage);
+        // Add the complete message to messages array
+        setMessages([{ role: 'bot', text: initialMessage }]);
+        // Clear the current response and stop initial typing
+        setCurrentBotResponse('');
+        setIsInitialTyping(false);
+        // Mark introduction as seen
+        localStorage.setItem('thandarSoeIntroSeen', 'true');
+        console.log('Introduction marked as seen, localStorage now:', localStorage.getItem('thandarSoeIntroSeen'));
+      };
+      
+      typeInitialMessage();
+    } else {
+      console.log('Skipping introduction - already seen');
+      // Skip introduction, just set initial typing to false
       setIsInitialTyping(false);
-    };
-    
-    typeInitialMessage();
+    }
+  }, []);
+
+  // Function to reset introduction (for testing)
+  const resetIntroduction = () => {
+    localStorage.removeItem('thandarSoeIntroSeen');
+    console.log('Introduction reset - will show on next page load');
+  };
+
+  // Add this to window for testing purposes
+  useEffect(() => {
+    window.resetIntroduction = resetIntroduction;
   }, []);
 
   const scrollToBottom = () => {
@@ -47,7 +83,7 @@ const App = () => {
 
     try {
       // The prompt is updated to include language detection and matching response language.
-      const prompt = `Your name is Thandar Soe. You are a helpful and friendly female real estate agent. CRITICAL INSTRUCTION: Detect the language of the user's input and respond ONLY in that same language. If user writes in Myanmar language (မြန်မာ), respond ONLY in Myanmar. If user writes in English, respond ONLY in English. Do not mix languages or provide translations. Your goal is to assist users with their real estate questions, provide information about properties, and guide them through the process. Your tone should be professional yet approachable. You can answer questions about buying, selling, or renting properties. Always end your response by asking how you can further assist the user in the SAME language they used. User: ${userMessage}`
+      const prompt = `You are Thandar Soe, a helpful and friendly female real estate agent. CRITICAL INSTRUCTION: Detect the language of the user's input and respond ONLY in that same language. If user writes in Myanmar language (မြန်မာ), respond ONLY in Myanmar. If user writes in English, respond ONLY in English. Do not mix languages or provide translations. Assist users with their real estate questions, provide information about properties, and guide them through the process. Your tone should be professional yet approachable. You can answer questions about buying, selling, or renting properties. Do NOT introduce yourself in every response - users already know who you are. Always end your response by asking how you can further assist the user in the SAME language they used. User: ${userMessage}`
       const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
 
       const payload = {
