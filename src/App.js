@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 // Avatar image - you can replace avatar.svg in the public folder with your own photo
 // Supported formats: .jpg, .png, .svg, .gif
@@ -54,7 +54,26 @@ const App = () => {
       setMessages([]);
       setIsInitialTyping(true);
     }
-  }, [isDarkMode]);
+  }, [isDarkMode, messages.length]);
+
+  // This function simulates the typing effect by adding characters one at a time to the currentBotResponse state
+  const speakMessage = useCallback((text) => {
+    return new Promise((resolve) => {
+      let typedText = '';
+      let charIndex = 0;
+
+      const interval = setInterval(() => {
+        if (charIndex < text.length) {
+          typedText += text[charIndex];
+          setCurrentBotResponse(typedText);
+          charIndex++;
+        } else {
+          clearInterval(interval);
+          resolve();
+        }
+      }, 50); // Adjust the delay between characters here (in milliseconds)
+    });
+  }, []);
 
   // Initial message with typing effect - only show on first visit
   useEffect(() => {
@@ -95,7 +114,7 @@ const App = () => {
       // Skip introduction, just set initial typing to false
       setIsInitialTyping(false);
     }
-  }, []);
+  }, [isDarkMode, speakMessage]);
 
   // Function to reset introduction (for testing)
   const resetIntroduction = () => {
@@ -184,25 +203,6 @@ const App = () => {
       setLoading(false);
       setIsSpeaking(false);
     }
-  };
-
-  // This function simulates the typing effect by adding characters one at a time to the currentBotResponse state
-  const speakMessage = (text) => {
-    return new Promise((resolve) => {
-      let typedText = '';
-      let charIndex = 0;
-
-      const interval = setInterval(() => {
-        if (charIndex < text.length) {
-          typedText += text[charIndex];
-          setCurrentBotResponse(typedText);
-          charIndex++;
-        } else {
-          clearInterval(interval);
-          resolve();
-        }
-      }, 50); // Adjust the delay between characters here (in milliseconds)
-    });
   };
 
   const Message = ({ role, text, showAvatar = false, isDarkMode }) => {
