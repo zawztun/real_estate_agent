@@ -54,7 +54,7 @@ const App = () => {
       setMessages([]);
       setIsInitialTyping(true);
     }
-  }, [isDarkMode, messages.length]);
+  }, [isDarkMode]);
 
   // This function simulates the typing effect by adding characters one at a time to the currentBotResponse state
   const speakMessage = useCallback((text) => {
@@ -75,45 +75,25 @@ const App = () => {
     });
   }, []);
 
-  // Initial message with typing effect - only show on first visit
+  // Initial message with typing effect - always show on app start
   useEffect(() => {
-    // For testing: uncomment the next line to always show introduction
-    localStorage.removeItem('thandarSoeIntroSeen');
+    console.log('Showing introduction message');
+    const initialMessage = isDarkMode 
+      ? 'မင်္ဂလာပါ! ကျွန်မ နာမည်က သန္တာစိုးပါ။ ကျွန်မက အိမ်ခြံမြေ အကူအညီပေးသူပါ။ ဘယ်လို ကူညီပေးရမလဲ?'
+      : 'Hello! My name is Thandar Soe, and I am your real estate assistant. How can I help you today?';
     
-    const hasSeenIntroduction = localStorage.getItem('thandarSoeIntroSeen');
-    console.log('Has seen introduction:', hasSeenIntroduction);
-    console.log('Type of hasSeenIntroduction:', typeof hasSeenIntroduction);
-    
-    // Show introduction if localStorage is null, undefined, or 'false'
-    const shouldShowIntroduction = !hasSeenIntroduction || hasSeenIntroduction !== 'true';
-    console.log('Should show introduction:', shouldShowIntroduction);
-    
-    if (shouldShowIntroduction) {
-      console.log('Showing introduction for first time');
-      const initialMessage = isDarkMode 
-        ? 'မင်္ဂလာပါ! ကျွန်မ နာမည်က သန္တာစိုးပါ။ ကျွန်မက အိမ်ခြံမြေ အကူအညီပေးသူပါ။ ဘယ်လို ကူညီပေးရမလဲ?'
-        : 'Hello! My name is Thandar Soe, and I am your real estate assistant. How can I help you today?';
-      
-      const typeInitialMessage = async () => {
-        console.log('Starting to type initial message');
-        setIsInitialTyping(true);
-        await speakMessage(initialMessage);
-        // Add the complete message to messages array
-        setMessages([{ role: 'bot', text: initialMessage }]);
-        // Clear the current response and stop initial typing
-        setCurrentBotResponse('');
-        setIsInitialTyping(false);
-        // Mark introduction as seen
-        localStorage.setItem('thandarSoeIntroSeen', 'true');
-        console.log('Introduction marked as seen, localStorage now:', localStorage.getItem('thandarSoeIntroSeen'));
-      };
-      
-      typeInitialMessage();
-    } else {
-      console.log('Skipping introduction - already seen');
-      // Skip introduction, just set initial typing to false
+    const typeInitialMessage = async () => {
+      console.log('Starting to type initial message');
+      setIsInitialTyping(true);
+      await speakMessage(initialMessage);
+      // Add the complete message to messages array
+      setMessages([{ role: 'bot', text: initialMessage }]);
+      // Clear the current response and stop initial typing
+      setCurrentBotResponse('');
       setIsInitialTyping(false);
-    }
+    };
+    
+    typeInitialMessage();
   }, [isDarkMode, speakMessage]);
 
   // Function to reset introduction (for testing)
