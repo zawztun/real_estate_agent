@@ -11,7 +11,50 @@ const App = () => {
   const [currentBotResponse, setCurrentBotResponse] = useState('');
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isInitialTyping, setIsInitialTyping] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem('isDarkMode');
+    if (savedTheme !== null) {
+      return savedTheme === 'true';
+    }
+    // If no saved preference, check system preference
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return true; // Default to dark mode if system prefers dark
+    }
+    return true; // Default to dark mode (Myanmar) if no system preference
+  });
   const messagesEndRef = useRef(null);
+
+  const toggleTheme = () => {
+    const newTheme = !isDarkMode;
+    setIsDarkMode(newTheme);
+    localStorage.setItem('isDarkMode', newTheme.toString());
+    // Clear introduction flag so new language message shows
+    localStorage.removeItem('hasSeenIntroduction');
+  };
+
+  // Listen for system theme changes
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e) => {
+      // Only update if user hasn't manually set a preference
+      const savedTheme = localStorage.getItem('isDarkMode');
+      if (savedTheme === null) {
+        setIsDarkMode(e.matches);
+      }
+    };
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
+  // Handle language change when theme mode changes
+  useEffect(() => {
+    if (messages.length > 0) {
+      // Clear messages and show new introduction in correct language
+      setMessages([]);
+      setIsInitialTyping(true);
+    }
+  }, [isDarkMode]);
 
   // Initial message with typing effect - only show on first visit
   useEffect(() => {
@@ -28,7 +71,9 @@ const App = () => {
     
     if (shouldShowIntroduction) {
       console.log('Showing introduction for first time');
-      const initialMessage = 'မင်္ဂလာပါ! ကျွန်မ နာမည်က သန္တာစိုးပါ။ ကျွန်မက အိမ်ခြံမြေ အကူအညီပေးသူပါ။ မြန်မာဘာသာနဲ့ မေးရင် မြန်မာနဲ့ပဲ ပြန်ဖြေပါမယ်။ English နဲ့ မေးရင် English နဲ့ပဲ ပြန်ဖြေပါမယ်။ \n\nHello! My name is Thandar Soe, and I am your real estate assistant. I will respond in the same language you use - Myanmar for Myanmar, English for English. How can I help you today?';
+      const initialMessage = isDarkMode 
+        ? 'မင်္ဂလာပါ! ကျွန်မ နာမည်က သန္တာစိုးပါ။ ကျွန်မက အိမ်ခြံမြေ အကူအညီပေးသူပါ။ ဘယ်လို ကူညီပေးရမလဲ?'
+        : 'Hello! My name is Thandar Soe, and I am your real estate assistant. How can I help you today?';
       
       const typeInitialMessage = async () => {
         console.log('Starting to type initial message');
@@ -82,8 +127,9 @@ const App = () => {
     setLoading(true);
 
     try {
-      // The prompt is updated to include language detection and matching response language.
-      const prompt = `You are Thandar Soe, a helpful and friendly female real estate agent. CRITICAL INSTRUCTION: Detect the language of the user's input and respond ONLY in that same language. If user writes in Myanmar language (မြန်မာ), respond ONLY in Myanmar. If user writes in English, respond ONLY in English. Do not mix languages or provide translations. Assist users with their real estate questions, provide information about properties, and guide them through the process. Your tone should be professional yet approachable. You can answer questions about buying, selling, or renting properties. Do NOT introduce yourself in every response - users already know who you are. Always end your response by asking how you can further assist the user in the SAME language they used. User: ${userMessage}`
+      // Language preference based on theme mode
+      const preferredLanguage = isDarkMode ? 'Myanmar' : 'English';
+      const prompt = `You are Thandar Soe, a helpful and friendly female real estate agent. CRITICAL INSTRUCTION: Respond ONLY in ${preferredLanguage} language regardless of the user's input language. If the preferred language is Myanmar, respond ONLY in Myanmar language (မြန်မာ). If the preferred language is English, respond ONLY in English. Do not mix languages or provide translations. Assist users with their real estate questions, provide information about properties, and guide them through the process. Your tone should be professional yet approachable. You can answer questions about buying, selling, or renting properties. Do NOT introduce yourself in every response - users already know who you are. Always end your response by asking how you can further assist the user in the SAME ${preferredLanguage} language. User: ${userMessage}`
       const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
 
       const payload = {
@@ -159,7 +205,7 @@ const App = () => {
     });
   };
 
-  const Message = ({ role, text, showAvatar = false }) => {
+  const Message = ({ role, text, showAvatar = false, isDarkMode }) => {
     const isUser = role === 'user';
     return (
       <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-3 sm:mb-4 items-start`}>
@@ -171,8 +217,11 @@ const App = () => {
           />
         )}
         <div
-          className={`p-3 sm:p-4 rounded-2xl sm:rounded-3xl max-w-[85%] sm:max-w-xl 
-          ${isUser ? 'bg-blue-600 text-white rounded-br-none' : 'bg-gray-200 text-gray-800 rounded-bl-none'} 
+          className={`p-3 sm:p-4 rounded-2xl sm:rounded-3xl max-w-[85%] sm:max-w-xl transition-all duration-300
+          ${isUser 
+            ? (isDarkMode ? 'glass-user-message-dark rounded-br-none' : 'glass-user-message-light rounded-br-none')
+            : (isDarkMode ? 'glass-bot-message-dark rounded-bl-none' : 'glass-bot-message-light rounded-bl-none')
+          } 
           ${!isUser && !showAvatar ? 'ml-10 sm:ml-16' : ''} whitespace-pre-wrap text-sm sm:text-base`}
         >
           <p>{text}</p>
@@ -182,27 +231,77 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center font-sans p-2 sm:p-4">
-      <div className="flex flex-col w-full max-w-3xl h-[90vh] sm:h-[80vh] bg-white shadow-xl rounded-2xl sm:rounded-3xl overflow-hidden">
-        <header className="bg-blue-600 text-white p-4 sm:p-6 shadow-md flex items-center">
-          <img
-            src={AVATAR_URL}
-            alt="Thandar Soe"
-            className="w-12 h-12 sm:w-16 sm:h-16 rounded-full mr-3 sm:mr-4 shadow-lg border-2 border-white object-cover flex-shrink-0"
-          />
-          <div className="min-w-0 flex-1">
-            <h1 className="text-lg sm:text-2xl lg:text-3xl font-bold leading-tight">Thandar Soe (Licensed Real Estate Realtor)</h1>
-            <p className="text-sm sm:text-lg mt-1">📞 518-707-8089</p>
+    <div 
+      className={`min-h-screen flex items-center justify-center font-sans p-2 sm:p-4 transition-all duration-300 ${
+        isDarkMode ? 'glass-bg-dark' : 'glass-bg-light'
+      }`}
+      style={{
+        background: isDarkMode 
+          ? 'linear-gradient(135deg, rgba(25, 25, 112, 0.9) 0%, rgba(72, 61, 139, 0.9) 25%, rgba(106, 90, 205, 0.9) 50%, rgba(123, 104, 238, 0.9) 75%, rgba(147, 112, 219, 0.9) 100%)'
+          : 'linear-gradient(135deg, rgba(255, 182, 193, 0.8) 0%, rgba(173, 216, 230, 0.8) 25%, rgba(221, 160, 221, 0.8) 50%, rgba(135, 206, 235, 0.8) 75%, rgba(255, 192, 203, 0.8) 100%)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)',
+        minHeight: '100vh'
+      }}
+    >
+      {/* Root Level Toggle Button */}
+      <button
+        onClick={toggleTheme}
+        className={`fixed top-3 sm:top-4 right-3 sm:right-4 z-50 w-16 sm:w-20 h-8 sm:h-10 rounded-full transition-all duration-300 hover:scale-105 shadow-lg ${
+          isDarkMode ? 'toggle-switch-dark' : 'toggle-switch-light'
+        }`}
+        title={isDarkMode ? 'Switch to Myanmar Mode' : 'Switch to English Mode'}
+      >
+        <div className={`w-6 sm:w-8 h-6 sm:h-8 bg-white rounded-full shadow-md transform transition-transform duration-300 flex items-center justify-center ${
+          isDarkMode ? 'translate-x-8 sm:translate-x-10' : 'translate-x-1'
+        }`}>
+          <span className="text-xs font-bold text-purple-600">
+             {isDarkMode ? 'M' : 'E'}
+           </span>
+        </div>
+      </button>
+      
+      <div className={`flex flex-col w-full max-w-3xl h-[90vh] sm:h-[80vh] shadow-xl rounded-2xl sm:rounded-3xl overflow-hidden transition-all duration-300 ${
+        isDarkMode ? 'glass-container-dark' : 'glass-container-light'
+      }`}>
+        <header 
+          className={`p-4 sm:p-6 shadow-md flex items-center transition-all duration-300 ${
+            isDarkMode ? 'glass-header-dark' : 'glass-header-light'
+          }`}
+          style={{
+            background: isDarkMode 
+              ? 'rgba(0, 0, 0, 0.9)' 
+              : 'rgba(59, 130, 246, 0.8)',
+            backdropFilter: 'blur(15px)',
+            WebkitBackdropFilter: 'blur(15px)',
+            borderBottom: isDarkMode 
+              ? '1px solid rgba(255, 215, 0, 0.3)' 
+              : '1px solid rgba(59, 130, 246, 0.4)',
+            color: '#ffffff'
+          }}
+        >
+          <div className="flex items-center">
+            <img
+              src={AVATAR_URL}
+              alt="Thandar Soe"
+              className="w-12 h-12 sm:w-16 sm:h-16 rounded-full mr-3 sm:mr-4 shadow-lg border-2 border-white object-cover flex-shrink-0"
+            />
+            <div className="min-w-0 flex-1">
+              <h1 className="text-lg sm:text-2xl lg:text-3xl font-bold leading-tight">Thandar Soe (Licensed Real Estate Realtor)</h1>
+              <p className="text-sm sm:text-lg mt-1">📞 518-707-8089</p>
+            </div>
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-3 sm:space-y-4 bg-gray-50">
+        <main className={`flex-1 overflow-y-auto p-3 sm:p-6 space-y-3 sm:space-y-4 transition-all duration-300 ${
+          isDarkMode ? 'glass-main-dark' : 'glass-main-light'
+        }`}>
           {messages.map((msg, index) => (
-            <Message key={index} role={msg.role} text={msg.text} showAvatar={msg.role === 'bot'}/>
+            <Message key={index} role={msg.role} text={msg.text} showAvatar={msg.role === 'bot'} isDarkMode={isDarkMode}/>
           ))}
           {/* Display the in-progress message */}
           {(isSpeaking || isInitialTyping) && (
-            <Message role='bot' text={currentBotResponse} showAvatar={true}/>
+            <Message role='bot' text={currentBotResponse} showAvatar={true} isDarkMode={isDarkMode}/>
           )}
           {loading && (
             <div className="flex justify-start mb-4 items-start">
@@ -211,11 +310,19 @@ const App = () => {
                 alt="Thandar Soe"
                 className="w-8 h-8 sm:w-12 sm:h-12 rounded-full mr-2 sm:mr-4 shadow-lg object-cover flex-shrink-0"
               />
-              <div className="p-3 sm:p-4 rounded-2xl sm:rounded-3xl max-w-[85%] sm:max-w-xl bg-gray-200 text-gray-800 rounded-bl-none">
+              <div className={`p-3 sm:p-4 rounded-2xl sm:rounded-3xl max-w-[85%] sm:max-w-xl rounded-bl-none transition-all duration-300 ${
+                isDarkMode ? 'glass-message-dark' : 'glass-message-light'
+              }`}>
                 <div className="flex space-x-1">
-                  <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                  <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                  <div className={`w-2 h-2 rounded-full animate-bounce ${
+                    isDarkMode ? 'bg-gray-300' : 'bg-gray-500'
+                  }`}></div>
+                  <div className={`w-2 h-2 rounded-full animate-bounce ${
+                    isDarkMode ? 'bg-gray-300' : 'bg-gray-500'
+                  }`} style={{animationDelay: '0.1s'}}></div>
+                  <div className={`w-2 h-2 rounded-full animate-bounce ${
+                    isDarkMode ? 'bg-gray-300' : 'bg-gray-500'
+                  }`} style={{animationDelay: '0.2s'}}></div>
                 </div>
               </div>
             </div>
@@ -223,20 +330,47 @@ const App = () => {
           <div ref={messagesEndRef} />
         </main>
 
-        <footer className="p-3 sm:p-6 bg-white border-t border-gray-200">
+        <footer className={`p-3 sm:p-6 border-t transition-all duration-300 ${
+          isDarkMode ? 'glass-footer-dark border-gray-600' : 'glass-footer-light border-gray-200'
+        }`}>
           <form onSubmit={handleSendMessage} className="flex space-x-2 sm:space-x-4">
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Type your message here..."
-              className="flex-1 p-3 sm:p-4 text-sm sm:text-base border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className={`flex-1 p-3 sm:p-4 text-sm sm:text-base border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 ${
+                isDarkMode 
+                  ? 'glass-input-dark border-gray-600 text-black placeholder-gray-500' 
+                  : 'glass-input-light border-gray-300 text-gray-900 placeholder-gray-500'
+              }`}
               disabled={loading || isSpeaking || isInitialTyping}
             />
             <button
               type="submit"
               disabled={loading || isSpeaking || isInitialTyping || !input.trim()}
-              className="px-4 sm:px-8 py-3 sm:py-4 text-sm sm:text-base bg-blue-600 text-white rounded-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
+              className={`px-4 sm:px-8 py-3 sm:py-4 text-sm sm:text-base rounded-full focus:outline-none whitespace-nowrap ${
+                isDarkMode 
+                  ? 'glass-button-dark' 
+                  : 'glass-button-light'
+              }`}
+              style={{
+                background: 'transparent',
+                backdropFilter: 'blur(10px)',
+                WebkitBackdropFilter: 'blur(10px)',
+                border: isDarkMode ? '1px solid rgba(255, 215, 0, 0.4)' : '1px solid rgba(59, 130, 246, 0.3)',
+                color: '#000000',
+                fontWeight: '600',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+              }}
+              onMouseEnter={(e) => {
+                 e.target.style.border = isDarkMode ? '2px solid rgba(255, 215, 0, 0.8)' : '2px solid rgba(59, 130, 246, 0.8)';
+                 e.target.style.transform = 'translateY(-3px) scale(1.02)';
+               }}
+               onMouseLeave={(e) => {
+                 e.target.style.border = isDarkMode ? '1px solid rgba(255, 215, 0, 0.4)' : '1px solid rgba(59, 130, 246, 0.3)';
+                 e.target.style.transform = 'translateY(0) scale(1)';
+               }}
             >
               {loading ? 'Sending...' : 'Send'}
             </button>
