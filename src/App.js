@@ -80,7 +80,7 @@ const App = () => {
     console.log('Showing introduction message');
     const initialMessage = isDarkMode 
       ? 'မင်္ဂလာပါ! ကျွန်မ က Realtor သန္တာစိုး အတွက် အလုပ်လုပ်ပေးနေတဲ့ အိမ်ခြံမြေ အကူအညီပေးသူ AI Agent Bot ပါ။ ဘယ်လို ကူညီပေးရမလဲ?'
-      : 'Hello! I am an AI Agent Bot working for Realtor Thanda Soe, assisting with real estate. How can I help you?';
+      : 'Hello! I am an AI Agent Bot working for Realtor Thandar Soe, assisting with real estate. How can I help you?';
     
     const typeInitialMessage = async () => {
       console.log('Starting to type initial message');
