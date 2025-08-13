@@ -128,7 +128,7 @@ const App = () => {
     try {
       // Language preference based on theme mode
       const preferredLanguage = isDarkMode ? 'Myanmar' : 'English';
-      const prompt = `You are Thandar Soe, a helpful and friendly female real estate agent. CRITICAL INSTRUCTION: Respond ONLY in ${preferredLanguage} language regardless of the user's input language. If the preferred language is Myanmar, respond ONLY in Myanmar language (မြန်မာ). If the preferred language is English, respond ONLY in English. Do not mix languages or provide translations. Assist users with their real estate questions, provide information about properties, and guide them through the process. Your tone should be professional yet approachable. You can answer questions about buying, selling, or renting properties. Do NOT introduce yourself in every response - users already know who you are. Always end your response by asking how you can further assist the user in the SAME ${preferredLanguage} language. User: ${userMessage}`
+      const prompt = `You are Thandar Soe, a helpful and friendly female real estate agent specializing in the USA real estate market. CRITICAL INSTRUCTION: Respond ONLY in ${preferredLanguage} language regardless of the user's input language. If the preferred language is Myanmar, respond ONLY in Myanmar language (မြန်မာ). If the preferred language is English, respond ONLY in English. Do not mix languages or provide translations. You provide expert advice based on USA real estate laws, regulations, market conditions, and practices. Assist users with their real estate questions about buying, selling, or renting properties in the United States. Your knowledge covers US mortgage processes, property taxes, HOA regulations, state-specific real estate laws, and current US market trends. Your tone should be professional yet approachable. Do NOT introduce yourself in every response - users already know who you are. Always end your response by asking how you can further assist the user in the SAME ${preferredLanguage} language. User: ${userMessage}`
       const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
 
       const payload = {
@@ -217,7 +217,7 @@ const App = () => {
       }`}
       style={{
         background: isDarkMode
-          ? 'linear-gradient(135deg, #1e3a8a 0%, #1e40af 25%, #0ea5e9 50%, #06b6d4 75%, #0891b2 100%)'
+          ? 'linear-gradient(9deg, rgba(3, 3, 46, 1) 0%, rgba(9, 9, 121, 1) 35%, rgba(0, 212, 255, 1) 100%)'
           : 'linear-gradient(135deg, rgba(255, 182, 193, 0.8) 0%, rgba(173, 216, 230, 0.8) 25%, rgba(221, 160, 221, 0.8) 50%, rgba(135, 206, 235, 0.8) 75%, rgba(255, 192, 203, 0.8) 100%)',
         backdropFilter: 'blur(10px)',
         WebkitBackdropFilter: 'blur(10px)',
@@ -227,16 +227,19 @@ const App = () => {
       {/* Root Level Toggle Button */}
       <button
         onClick={toggleTheme}
-        className={`fixed top-3 sm:top-4 right-3 sm:right-4 z-50 w-16 sm:w-20 h-8 sm:h-10 rounded-full transition-all duration-300 hover:scale-105 shadow-lg ${
+        disabled={isInitialTyping}
+        className={`fixed top-3 sm:top-4 right-3 sm:right-4 z-50 w-20 sm:w-24 h-8 sm:h-10 rounded-full transition-all duration-300 shadow-lg ${
+          isInitialTyping ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'
+        } ${
           isDarkMode ? 'toggle-switch-dark' : 'toggle-switch-light'
         }`}
-        title={isDarkMode ? 'Switch to Myanmar Mode' : 'Switch to English Mode'}
+        title={isInitialTyping ? 'Please wait...' : (isDarkMode ? 'Switch to English Mode' : 'Switch to Myanmar Mode')}
       >
-        <div className={`w-6 sm:w-8 h-6 sm:h-8 bg-white rounded-full shadow-md transform transition-transform duration-300 flex items-center justify-center ${
-          isDarkMode ? 'translate-x-8 sm:translate-x-10' : 'translate-x-1'
+        <div className={`w-8 sm:w-10 h-6 sm:h-8 bg-white rounded-full shadow-md transform transition-transform duration-300 flex items-center justify-center ${
+          isDarkMode ? 'translate-x-10 sm:translate-x-12' : 'translate-x-1'
         }`}>
-          <span className={`text-sm font-bold ${isDarkMode ? 'text-white' : 'text-purple-600'}`}>
-             {isDarkMode ? 'M' : 'E'}
+          <span className="text-xs font-bold text-black">
+             {isDarkMode ? 'MYA' : 'ENG'}
            </span>
         </div>
       </button>
@@ -250,12 +253,12 @@ const App = () => {
           }`}
           style={{
             background: isDarkMode 
-              ? 'rgba(0, 0, 0, 0.95)' 
-              : 'rgba(59, 130, 246, 0.8)',
+              ? 'linear-gradient(135deg, rgba(3, 3, 46, 0.95) 0%, rgba(9, 9, 121, 0.9) 50%, rgba(0, 212, 255, 0.85) 100%)' 
+              : 'linear-gradient(135deg, rgba(255, 182, 193, 0.9) 0%, rgba(173, 216, 230, 0.85) 35%, rgba(221, 160, 221, 0.8) 100%)',
             backdropFilter: 'blur(15px)',
             WebkitBackdropFilter: 'blur(15px)',
             borderBottom: isDarkMode 
-              ? '1px solid rgba(212, 175, 55, 0.4)' 
+              ? '1px solid rgba(0, 212, 255, 0.4)' 
               : '1px solid rgba(59, 130, 246, 0.4)',
             color: '#ffffff'
           }}
