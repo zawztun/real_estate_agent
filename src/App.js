@@ -235,10 +235,19 @@ const App = () => {
         }`}
         title={isInitialTyping ? 'Please wait...' : (isDarkMode ? 'Switch to English Mode' : 'Switch to Myanmar Mode')}
       >
-        <div className={`w-8 sm:w-10 h-6 sm:h-8 bg-white rounded-full shadow-md transform transition-transform duration-300 flex items-center justify-center ${
+        <div className={`w-8 sm:w-10 h-6 sm:h-8 rounded-full shadow-md transform transition-transform duration-300 flex items-center justify-center ${
           isDarkMode ? 'translate-x-10 sm:translate-x-12' : 'translate-x-1'
-        }`}>
-          <span className="text-xs font-bold text-black">
+        }`}
+        style={{
+          background: isDarkMode 
+            ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(0, 212, 255, 0.3) 100%)'
+            : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(173, 216, 230, 0.4) 100%)',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)'
+        }}>
+          <span className={`text-xs font-bold ${
+            isDarkMode ? 'text-gray-800' : 'text-gray-700'
+          }`}>
              {isDarkMode ? 'MYA' : 'ENG'}
            </span>
         </div>
