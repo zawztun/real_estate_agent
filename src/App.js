@@ -54,7 +54,7 @@ const App = () => {
       setMessages([]);
       setIsInitialTyping(true);
     }
-  }, [isDarkMode]);
+  }, [isDarkMode]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // This function simulates the typing effect by adding characters one at a time to the currentBotResponse state
   const speakMessage = useCallback((text) => {
