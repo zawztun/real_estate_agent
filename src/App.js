@@ -79,8 +79,8 @@ const App = () => {
   useEffect(() => {
     console.log('Showing introduction message');
     const initialMessage = isDarkMode 
-      ? 'မင်္ဂလာပါ! ကျွန်မ က Realtor သန္တာစိုး အတွက် အလုပ်လုပ်ပေးနေတဲ့ အိမ်ခြံမြေ အကူအညီပေးသူ AI Agent Bot ပါ။ ဘယ်လို ကူညီပေးရမလဲ?'
-      : 'Hello! I am an AI Agent Bot working for Realtor Thandar Soe, assisting with real estate. How can I help you?';
+      ? 'မင်္ဂလာပါ! ကျွန်မ က Realtor **သန္တာစိုး** အတွက် အလုပ်လုပ်ပေးနေတဲ့ အိမ်ခြံမြေ အကူအညီပေးသူ AI Agent Bot ပါ။ ဘယ်လို ကူညီပေးရမလဲ?'
+      : 'Hello! I am an AI Agent Bot working for Realtor **Thandar Soe**, assisting with real estate. How can I help you?';
     
     const typeInitialMessage = async () => {
       console.log('Starting to type initial message');
@@ -187,6 +187,19 @@ const App = () => {
 
   const Message = ({ role, text, showAvatar = false, isDarkMode }) => {
     const isUser = role === 'user';
+    
+    // Function to render text with bold formatting
+    const renderTextWithBold = (text) => {
+      const parts = text.split(/\*\*(.*?)\*\*/);
+      return parts.map((part, index) => {
+        if (index % 2 === 1) {
+          // Odd indices are the content inside **
+          return <strong key={index} style={{ fontWeight: '900', textShadow: isDarkMode ? '1px 1px 2px rgba(0, 0, 0, 0.8)' : '1px 1px 2px rgba(0, 0, 0, 0.3)' }}>{part}</strong>;
+        }
+        return part;
+      });
+    };
+    
     return (
       <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-3 sm:mb-4 items-start`}>
         {!isUser && showAvatar && (
@@ -204,7 +217,7 @@ const App = () => {
           } 
           ${!isUser && !showAvatar ? 'ml-10 sm:ml-16' : ''} whitespace-pre-wrap text-base sm:text-lg`}
         >
-          <p className={isDarkMode ? 'text-white' : ''}>{text}</p>
+          <p className={isDarkMode ? 'text-white' : ''}>{renderTextWithBold(text)}</p>
         </div>
       </div>
     );
