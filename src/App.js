@@ -79,8 +79,8 @@ const App = () => {
   useEffect(() => {
     console.log('Showing introduction message');
     const initialMessage = isDarkMode 
-      ? 'မင်္ဂလာပါ! ကျွန်မ နာမည်က သန္တာစိုးပါ။ ကျွန်မက အိမ်ခြံမြေ အကူအညီပေးသူပါ။ ဘယ်လို ကူညီပေးရမလဲ?'
-      : 'Hello! My name is Thandar Soe, and I am your real estate assistant. How can I help you today?';
+      ? 'မင်္ဂလာပါ! ကျွန်မ က Realtor သန္တာစိုး အတွက် အလုပ်လုပ်ပေးနေတဲ့ အိမ်ခြံမြေ အကူအညီပေးသူ AI Agent Bot ပါ။ ဘယ်လို ကူညီပေးရမလဲ?'
+      : 'Hello! I am an AI Agent Bot working for Realtor Thanda Soe, assisting with real estate. How can I help you?';
     
     const typeInitialMessage = async () => {
       console.log('Starting to type initial message');
