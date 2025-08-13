@@ -15,14 +15,13 @@
 
 .glass-bg-dark {
   background: linear-gradient(135deg, 
-    rgba(25, 25, 112, 0.9) 0%,
-    rgba(72, 61, 139, 0.9) 25%,
-    rgba(106, 90, 205, 0.9) 50%,
-    rgba(123, 104, 238, 0.9) 75%,
-    rgba(147, 112, 219, 0.9) 100%) !important;
+    #1e3a8a 0%,
+    #1e40af 25%,
+    #0ea5e9 50%,
+    #06b6d4 75%,
+    #0891b2 100%) !important;
   backdrop-filter: blur(10px) !important;
   -webkit-backdrop-filter: blur(10px) !important;
-  min-height: 100vh !important;
 }
 
 /* Container Styles */
@@ -37,12 +36,12 @@
 }
 
 .glass-container-dark {
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(15, 23, 42, 0.85);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 215, 0, 0.3);
+  border: 1px solid rgba(59, 130, 246, 0.3);
   border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 32px rgba(29, 78, 216, 0.4);
   color: #ffffff;
 }
 
@@ -57,12 +56,12 @@
 }
 
 .glass-header-dark {
-  background: rgba(0, 0, 0, 0.9) !important;
+  background: rgba(15, 23, 42, 0.95) !important;
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
-  border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+  border-bottom: 1px solid rgba(59, 130, 246, 0.4);
   color: #ffffff !important;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 15px rgba(29, 78, 216, 0.3);
 }
 
 /* Toggle Button Styles */
@@ -102,9 +101,11 @@
 }
 
 .glass-main-dark {
-  background: rgba(15, 23, 42, 0.3);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
 }
 
 /* Message Styles */
@@ -118,12 +119,12 @@
 }
 
 .glass-user-message-dark {
-  background: rgba(255, 215, 0, 0.2);
+  background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 215, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   color: #ffffff;
-  box-shadow: 0 8px 32px 0 rgba(255, 215, 0, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
 }
 
 .glass-bot-message-light {
@@ -136,12 +137,12 @@
 }
 
 .glass-bot-message-dark {
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 215, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   color: #ffffff;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
 }
 
 .glass-message-light {
@@ -154,10 +155,10 @@
 }
 
 .glass-message-dark {
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 215, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 15px;
   color: #ffffff;
 }
@@ -171,10 +172,10 @@
 }
 
 .glass-footer-dark {
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(15, 23, 42, 0.8);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
-  border-top: 1px solid rgba(255, 215, 0, 0.3);
+  border-top: 1px solid rgba(59, 130, 246, 0.3);
 }
 
 /* Input Styles */
@@ -197,21 +198,21 @@
 }
 
 .glass-input-dark {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(15, 23, 42, 0.7);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 215, 0, 0.4);
+  border: 1px solid rgba(59, 130, 246, 0.4);
   color: #000000;
 }
 
 .glass-input-dark::placeholder {
-  color: #6b7280;
+  color: #d1d5db;
 }
 
 .glass-input-dark:focus {
-  background: rgba(255, 255, 255, 0.95);
-  border-color: rgba(255, 215, 0, 0.6);
-  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+  background: rgba(15, 23, 42, 0.9);
+  border-color: rgba(59, 130, 246, 0.6);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
 /* Button Styles */
@@ -251,35 +252,35 @@ button.glass-button-light:disabled {
 
 button.glass-button-dark,
 button[type="submit"].glass-button-dark {
-  background: rgba(255, 215, 0, 0.8) !important;
+  background: rgba(59, 130, 246, 0.8) !important;
   backdrop-filter: blur(10px) !important;
   -webkit-backdrop-filter: blur(10px) !important;
-  border: 3px solid rgba(255, 215, 0, 0.9) !important;
-  color: #000000 !important;
+  border: 3px solid rgba(59, 130, 246, 0.9) !important;
+  color: #ffffff !important;
   font-weight: 600 !important;
-  box-shadow: 0 4px 15px 0 rgba(255, 215, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 4px 15px 0 rgba(59, 130, 246, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 button.glass-button-dark:hover,
 button[type="submit"].glass-button-dark:hover,
 button.glass-button-dark:disabled:hover {
-  background: rgba(255, 215, 0, 0.95) !important;
-  border: 3px solid rgba(255, 215, 0, 1.0) !important;
-  box-shadow: 0 8px 25px 0 rgba(255, 215, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+  background: rgba(59, 130, 246, 0.95) !important;
+  border: 3px solid rgba(59, 130, 246, 1.0) !important;
+  box-shadow: 0 8px 25px 0 rgba(59, 130, 246, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
   transform: translateY(-3px) scale(1.02) !important;
 }
 
 button.glass-button-dark:active,
 button[type="submit"].glass-button-dark:active {
   transform: translateY(-1px) scale(0.98) !important;
-  box-shadow: 0 2px 10px 0 rgba(255, 215, 0, 0.5) !important;
+  box-shadow: 0 2px 10px 0 rgba(59, 130, 246, 0.5) !important;
 }
 
 button.glass-button-dark:disabled {
-  background: rgba(255, 215, 0, 0.4) !important;
-  border: 3px solid rgba(255, 215, 0, 0.3) !important;
-  color: rgba(0, 0, 0, 0.5) !important;
+  background: rgba(59, 130, 246, 0.4) !important;
+  border: 3px solid rgba(59, 130, 246, 0.3) !important;
+  color: rgba(255, 255, 255, 0.5) !important;
   cursor: not-allowed !important;
 }
 

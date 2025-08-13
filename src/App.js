@@ -202,9 +202,9 @@ const App = () => {
             ? (isDarkMode ? 'glass-user-message-dark rounded-br-none' : 'glass-user-message-light rounded-br-none')
             : (isDarkMode ? 'glass-bot-message-dark rounded-bl-none' : 'glass-bot-message-light rounded-bl-none')
           } 
-          ${!isUser && !showAvatar ? 'ml-10 sm:ml-16' : ''} whitespace-pre-wrap text-sm sm:text-base`}
+          ${!isUser && !showAvatar ? 'ml-10 sm:ml-16' : ''} whitespace-pre-wrap text-base sm:text-lg`}
         >
-          <p>{text}</p>
+          <p className={isDarkMode ? 'text-white' : ''}>{text}</p>
         </div>
       </div>
     );
@@ -216,8 +216,8 @@ const App = () => {
         isDarkMode ? 'glass-bg-dark' : 'glass-bg-light'
       }`}
       style={{
-        background: isDarkMode 
-          ? 'linear-gradient(135deg, rgba(25, 25, 112, 0.9) 0%, rgba(72, 61, 139, 0.9) 25%, rgba(106, 90, 205, 0.9) 50%, rgba(123, 104, 238, 0.9) 75%, rgba(147, 112, 219, 0.9) 100%)'
+        background: isDarkMode
+          ? 'linear-gradient(135deg, #1e3a8a 0%, #1e40af 25%, #0ea5e9 50%, #06b6d4 75%, #0891b2 100%)'
           : 'linear-gradient(135deg, rgba(255, 182, 193, 0.8) 0%, rgba(173, 216, 230, 0.8) 25%, rgba(221, 160, 221, 0.8) 50%, rgba(135, 206, 235, 0.8) 75%, rgba(255, 192, 203, 0.8) 100%)',
         backdropFilter: 'blur(10px)',
         WebkitBackdropFilter: 'blur(10px)',
@@ -235,7 +235,7 @@ const App = () => {
         <div className={`w-6 sm:w-8 h-6 sm:h-8 bg-white rounded-full shadow-md transform transition-transform duration-300 flex items-center justify-center ${
           isDarkMode ? 'translate-x-8 sm:translate-x-10' : 'translate-x-1'
         }`}>
-          <span className="text-xs font-bold text-purple-600">
+          <span className={`text-sm font-bold ${isDarkMode ? 'text-white' : 'text-purple-600'}`}>
              {isDarkMode ? 'M' : 'E'}
            </span>
         </div>
@@ -250,12 +250,12 @@ const App = () => {
           }`}
           style={{
             background: isDarkMode 
-              ? 'rgba(0, 0, 0, 0.9)' 
+              ? 'rgba(0, 0, 0, 0.95)' 
               : 'rgba(59, 130, 246, 0.8)',
             backdropFilter: 'blur(15px)',
             WebkitBackdropFilter: 'blur(15px)',
             borderBottom: isDarkMode 
-              ? '1px solid rgba(255, 215, 0, 0.3)' 
+              ? '1px solid rgba(212, 175, 55, 0.4)' 
               : '1px solid rgba(59, 130, 246, 0.4)',
             color: '#ffffff'
           }}
@@ -267,8 +267,8 @@ const App = () => {
               className="w-12 h-12 sm:w-16 sm:h-16 rounded-full mr-3 sm:mr-4 shadow-lg border-2 border-white object-cover flex-shrink-0"
             />
             <div className="min-w-0 flex-1">
-              <h1 className="text-lg sm:text-2xl lg:text-3xl font-bold leading-tight">Thandar Soe (Licensed Real Estate Realtor)</h1>
-              <p className="text-sm sm:text-lg mt-1">📞 518-707-8089</p>
+              <h1 className={`text-xl sm:text-2xl lg:text-3xl font-bold leading-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Thandar Soe (Licensed Real Estate Realtor)</h1>
+                <p className={`text-base sm:text-lg mt-1 ${isDarkMode ? 'text-white' : 'text-gray-700'}`}>📞 518-707-8089</p>
             </div>
           </div>
         </header>
@@ -295,13 +295,13 @@ const App = () => {
               }`}>
                 <div className="flex space-x-1">
                   <div className={`w-2 h-2 rounded-full animate-bounce ${
-                    isDarkMode ? 'bg-gray-300' : 'bg-gray-500'
+                    isDarkMode ? 'bg-white' : 'bg-gray-500'
                   }`}></div>
                   <div className={`w-2 h-2 rounded-full animate-bounce ${
-                    isDarkMode ? 'bg-gray-300' : 'bg-gray-500'
+                    isDarkMode ? 'bg-white' : 'bg-gray-500'
                   }`} style={{animationDelay: '0.1s'}}></div>
                   <div className={`w-2 h-2 rounded-full animate-bounce ${
-                    isDarkMode ? 'bg-gray-300' : 'bg-gray-500'
+                    isDarkMode ? 'bg-white' : 'bg-gray-500'
                   }`} style={{animationDelay: '0.2s'}}></div>
                 </div>
               </div>
@@ -319,9 +319,9 @@ const App = () => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Type your message here..."
-              className={`flex-1 p-3 sm:p-4 text-sm sm:text-base border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 ${
+              className={`flex-1 p-3 sm:p-4 text-base sm:text-lg border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 ${
                 isDarkMode 
-                  ? 'glass-input-dark border-gray-600 text-black placeholder-gray-500' 
+                  ? 'glass-input-dark border-gray-600 text-black placeholder-gray-300' 
                   : 'glass-input-light border-gray-300 text-gray-900 placeholder-gray-500'
               }`}
               disabled={loading || isSpeaking || isInitialTyping}
@@ -329,7 +329,7 @@ const App = () => {
             <button
               type="submit"
               disabled={loading || isSpeaking || isInitialTyping || !input.trim()}
-              className={`px-4 sm:px-8 py-3 sm:py-4 text-sm sm:text-base rounded-full focus:outline-none whitespace-nowrap ${
+              className={`px-4 sm:px-8 py-3 sm:py-4 text-base sm:text-lg rounded-full focus:outline-none whitespace-nowrap ${
                 isDarkMode 
                   ? 'glass-button-dark' 
                   : 'glass-button-light'
@@ -338,17 +338,17 @@ const App = () => {
                 background: 'transparent',
                 backdropFilter: 'blur(10px)',
                 WebkitBackdropFilter: 'blur(10px)',
-                border: isDarkMode ? '1px solid rgba(255, 215, 0, 0.4)' : '1px solid rgba(59, 130, 246, 0.3)',
-                color: '#000000',
+                border: isDarkMode ? '1px solid rgba(212, 175, 55, 0.4)' : '1px solid rgba(59, 130, 246, 0.3)',
+                color: isDarkMode ? '#ffffff' : '#000000',
                 fontWeight: '600',
                 transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
               }}
               onMouseEnter={(e) => {
-                 e.target.style.border = isDarkMode ? '2px solid rgba(255, 215, 0, 0.8)' : '2px solid rgba(59, 130, 246, 0.8)';
+                 e.target.style.border = isDarkMode ? '2px solid rgba(212, 175, 55, 0.8)' : '2px solid rgba(59, 130, 246, 0.8)';
                  e.target.style.transform = 'translateY(-3px) scale(1.02)';
                }}
                onMouseLeave={(e) => {
-                 e.target.style.border = isDarkMode ? '1px solid rgba(255, 215, 0, 0.4)' : '1px solid rgba(59, 130, 246, 0.3)';
+                 e.target.style.border = isDarkMode ? '1px solid rgba(212, 175, 55, 0.4)' : '1px solid rgba(59, 130, 246, 0.3)';
                  e.target.style.transform = 'translateY(0) scale(1)';
                }}
             >
